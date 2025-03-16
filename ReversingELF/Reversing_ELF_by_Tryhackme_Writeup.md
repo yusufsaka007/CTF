@@ -49,6 +49,7 @@ Run `strings` again for `crackme3` and we get an encoded password that looks lik
 <p align="center">
   <img src="https://github.com/yusufsaka007/CTF/blob/main/ReversingELF/img/3_2.png?raw=true" width="200">
 </p>
+
 ## 4 - Challenge 4
 Running `./crackme4` with a random password gives us a tip. This string is hidden and uses `strcmp`.
 
