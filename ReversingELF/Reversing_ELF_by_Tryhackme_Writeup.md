@@ -27,7 +27,7 @@ mv ~/Downloads/crackme* .
 ```
 
 ## 1 - Challenge 1
-Time to start our journey! Just execute the program (first `chmod +x` to make it executable) and you will get the flag. Easy peasy!
+Time to start our journey! Just execute the program (first `chmod +x` to make it executable) and you will get the flag. Easy so far.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/yusufsaka007/CTF/refs/heads/main/ReversingELF/img/1.png" width="200">
@@ -41,7 +41,7 @@ Let's use the `strings` command to see the hidden strings and snag the password.
 </p>
 
 ## 3 - Challenge 3
-Run `strings` again for `crackme3` and we get an encoded password that looks like it’s in Base64. Time to decode it and reveal its secrets!
+Run `strings` again for `crackme3` and we get an encoded password that looks like it’s in Base64. Let's decode it and reveal its content
 
 <p align="center">
   <img src="https://github.com/yusufsaka007/CTF/blob/main/ReversingELF/img/3_1.png?raw=true" width="200">
@@ -50,7 +50,7 @@ Run `strings` again for `crackme3` and we get an encoded password that looks lik
   <img src="https://github.com/yusufsaka007/CTF/blob/main/ReversingELF/img/3_2.png?raw=true" width="200">
 </p>
 ## 4 - Challenge 4
-Running `./crackme4` with a random password gives us a tip. This sneaky string is hidden and uses `strcmp`.
+Running `./crackme4` with a random password gives us a tip. This string is hidden and uses `strcmp`.
 
 <p align="center">
   <img src="https://github.com/yusufsaka007/CTF/blob/main/ReversingELF/img/4_1.png?raw=true" width="200">
@@ -86,7 +86,7 @@ Time to bring out the big guns: Ghidra. We see bytes being added to an array. Co
 </p>
 
 ## 6 - Challenge 6
-Now we analyze the `my_secure_test` function called in `compare_pwd`. If `my_secure_test` returns 0, the password is correct. Let’s figure out what to provide to get that magical 0.
+Now we analyze the `my_secure_test` function called in `compare_pwd`. If `my_secure_test` returns 0, the password is correct. Let’s figure out what to provide to get that 0.
 
 <p align="center">
   <img src="https://github.com/yusufsaka007/CTF/blob/main/ReversingELF/img/6_1.png?raw=true" width="200">
@@ -105,7 +105,7 @@ Executing the program, we face a menu with 3 options:
   <img src="https://github.com/yusufsaka007/CTF/blob/main/ReversingELF/img/7_1.png?raw=true" width="200">
 </p>
 
-The program claims we only have 3 options, but let’s see if we can find a secret fourth option using Ghidra. If we input the password corresponding to `0x7a69` (which is `31337`), we get the flag. Hacking is fun!
+The program claims we only have 3 options, but let’s see if we can find a secret fourth option using Ghidra. If we input the password corresponding to `0x7a69` (which is `31337`), we get the flag. 
 
 <p align="center">
   <img src="https://github.com/yusufsaka007/CTF/blob/main/ReversingELF/img/7_2.png?raw=true" width="200">
@@ -115,7 +115,7 @@ The program claims we only have 3 options, but let’s see if we can find a secr
 </p>
 
 ## 8 - Challenge 8
-Another straightforward challenge. The program takes an argument via `argv[1]`, converts it to a string with `atoi`, and checks if it equals `-889262067`. Let’s smash that check!
+Another straightforward challenge. The program takes an argument via `argv[1]`, converts it to a string with `atoi`, and checks if it equals `-889262067`. 
 
 <p align="center">
   <img src="https://github.com/yusufsaka007/CTF/blob/main/ReversingELF/img/8_1.png?raw=true" width="200">
