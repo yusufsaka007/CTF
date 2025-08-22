@@ -25,10 +25,9 @@ def decrypt(password, salt, associated_data, nonce, ciphertext, tag):
         cipher = AES.new(key, AES.MODE_GCM, nonce=nonce)
         cipher.update(associated_data)
         plaintext = cipher.decrypt_and_verify(ciphertext, tag)
-        print("Password: {}".format(plaintext.decode("utf-8")))
-        return True
+        return plaintext.decode("utf-8")
     except Exception as e:
-        return False
+        return None
 
 
 def main():
@@ -73,14 +72,21 @@ def main():
             for password in file:
                 password = password.strip()
                 status_line(f"Attempting: {password}")
-                rc = decrypt(password, salt, associated_data, nonce, ciphertext, tag)
-                if not rc:
+                plaintext = decrypt(password, salt, associated_data, nonce, ciphertext, tag)
+                if not plaintext:
                     continue
+                print("\nDecryption Successful")
+                print(f"Password: {plaintext}")
                 break
+            print("\n\nExhausted")
     else:     
-        rc = decrypt(args.password, salt, associated_data, nonce, ciphertext, tag)
-        if not rc:
+        plaintext = decrypt(args.password, salt, associated_data, nonce, ciphertext, tag)
+        if not plaintext:
             print("Failed to decrypt password")
+            return 
 
+        print("\nDecryption Successful")
+        print(f"Password: {plaintext}")
+        
 if __name__ == "__main__":
     main()
