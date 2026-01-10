@@ -94,6 +94,6 @@ if __name__ == "__main__":
 
     for user in users:
         payload_pw["username"] = user
-        find_password("^h3mXK8RhU~f{]f5")
+        find_password("")
 
     print("Finished")
