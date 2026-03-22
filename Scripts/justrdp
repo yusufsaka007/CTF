@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Defaults
+DRIVE_ARG=""
+
+# Parse arguments
+while getopts "u:p:v:d:" opt; do
+    case $opt in
+        u) USER="$OPTARG" ;;
+        p) PASS="$OPTARG" ;;
+        v) HOST="$OPTARG" ;;
+        d) DRIVE_ARG="+drives /drive:shared,$OPTARG" ;;
+        *) echo "Usage: $0 -u <username> -p <password> -v <host> [-d <path_to_share>]"; exit 1 ;;
+    esac
+done
+
+# Check required args
+if [[ -z "$USER" || -z "$PASS" || -z "$HOST" ]]; then
+    echo "Missing required arguments."
+    echo "Usage: $0 -u <username> -p <password> -v <host> [-d <path_to_share>]"
+    exit 1
+fi
+
+# Execute
+sdl-freerdp3 /u:"$USER" /p:"$PASS" /v:"$HOST" /cert:ignore /dynamic-resolution -grab-keyboard $DRIVE_ARG 
