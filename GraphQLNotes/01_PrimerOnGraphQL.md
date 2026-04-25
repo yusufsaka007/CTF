@@ -62,3 +62,8 @@ query {
 The `users` query will allow the consumer to receive all of the usernames and emails of the application.
 
 An advantage of using GraphQL is performance. GraphQL improves the speed of client-server interactions by saving the client from having to make multiple requests in order to retrieve the complete set of data it needs from an application.
+
+# Authentication and Authorization Flaws
+One of the most common vulnerabilities that occur in the field of GraphQL is broken authentication and authorization. Authentication and authorization are complex security controls in any API technology. 
+
+
